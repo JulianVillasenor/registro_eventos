@@ -12,21 +12,54 @@
 <body>
 
     <main class="container">
+
         <h1>Registro de Eventos</h1>
 
-        <p>
-            Sistema de registro y control de acceso a eventos.
+        <p class="subtitle">
+            Registra tus datos para confirmar tu asistencia.
         </p>
 
         <div class="card">
-            <h2>Registro próximamente</h2>
 
-            <p>
-                El formulario de registro estará disponible aquí.
-            </p>
+            <h2>Registro</h2>
+
+            <form id="registroForm">
+
+                <div class="campo">
+                    <label for="nombre">Nombre</label>
+                    <input
+                        type="text"
+                        id="nombre"
+                        name="nombre"
+                        placeholder="Tu nombre completo"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="email">Correo electrónico</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="correo@ejemplo.com"
+                        required
+                    >
+                </div>
+
+                <button type="submit" id="btnRegistrar">
+                    Registrarme
+                </button>
+
+            </form>
+
+            <p id="mensaje"></p>
+
         </div>
+
     </main>
 
     <script src="app.js"></script>
+
 </body>
 </html>
