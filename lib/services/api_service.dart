@@ -1,37 +1,30 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  Future<dynamic> get(String url) async {
-    final response = await http.get(Uri.parse(url));
+  static const String baseUrl =
+      'https://script.google.com/macros/s/AKfycbw3uPWSIrl6cimlAv5NyTUB8INlJi0Nnlwj0g8S_GFpbX2qCEJ3O8MKojdHrkXXGtWpwQ/exec';
 
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return jsonDecode(response.body);
+  static Future<int> obtenerRegistrados() async {
+    final response = await http.get(
+      Uri.parse(baseUrl),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception(
+        'Error HTTP ${response.statusCode}',
+      );
     }
 
-    throw Exception(
-      'GET error ${response.statusCode}: ${response.body}',
-    );
-  }
+    final data = jsonDecode(response.body);
 
-  Future<dynamic> post(
-      String url,
-      Map<String, dynamic> body,
-      ) async {
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(body),
-    );
-
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return jsonDecode(response.body);
+    if (data['status'] != 'ok') {
+      throw Exception(
+        data['message'] ?? 'Error al consultar la API',
+      );
     }
 
-    throw Exception(
-      'POST error ${response.statusCode}: ${response.body}',
-    );
+    return data['registrados'] ?? 0;
   }
 }
