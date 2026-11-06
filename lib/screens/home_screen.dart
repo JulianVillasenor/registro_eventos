@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../models/estadisticas.dart';
+import 'qr_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -9,7 +11,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int registrados = 0;
+
+  Estadisticas? estadisticas;
   bool cargando = true;
   String? error;
 
@@ -20,17 +23,24 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> cargarDatos() async {
+    setState(() {
+      cargando = true;
+      error = null;
+    });
+
     try {
-      final total = await ApiService.obtenerRegistrados();
+      final resultado = await ApiService.obtenerEstadisticas();
 
       if (!mounted) return;
 
       setState(() {
-        registrados = total;
+        estadisticas = resultado;
         cargando = false;
         error = null;
       });
     } catch (e) {
+      debugPrint('ERROR AL CONSULTAR API: ${e.runtimeType}: $e');
+
       if (!mounted) return;
 
       setState(() {
@@ -74,7 +84,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: _StatCard(
                       title: 'Registrados',
-                      value: cargando ? '...' : registrados.toString(),
+                      //
+                      value: cargando
+                          ? '...'
+                          : (estadisticas?.registrados ?? 0).toString(),
                       icon: Icons.people_alt_outlined,
                     ),
                   ),
@@ -82,7 +95,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: _StatCard(
                       title: 'Ingresaron',
-                      value: '76',
+                      value: cargando
+                          ? '...'
+                          : (estadisticas?.ingresaron ?? 0).toString(),
                       icon: Icons.check_circle_outline,
                     ),
                   ),
@@ -95,9 +110,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: double.infinity,
                 height: 160,
                 child: FilledButton(
-                  onPressed: () {
-                    // Próximo paso: abrir scanner QR.
+                  onPressed: () async {
+                    final String? contenido = await Navigator.push<String>(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const QRScreen(),
+                      ),
+                    );
+
+                    if (!mounted || contenido == null) return;
+
+                    debugPrint('QR escaneado: $contenido');
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('QR leído: $contenido'),
+                        duration: const Duration(seconds: 4),
+                      ),
+                    );
                   },
+
                   style: FilledButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
