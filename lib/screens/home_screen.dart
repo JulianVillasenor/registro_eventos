@@ -118,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
 
-                    if (!mounted || contenido == null) return;
+                    if (!context.mounted || contenido == null) return;
 
                     debugPrint('QR escaneado: $contenido');
 

@@ -19,7 +19,7 @@ class AppTheme {
         foregroundColor: Color(0xFF172033),
       ),
 
-      cardTheme: const CardTheme(
+      cardTheme: const CardThemeData(
         elevation: 0,
         margin: EdgeInsets.zero,
       ),
