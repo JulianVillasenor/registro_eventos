@@ -80,17 +80,25 @@ function doPost(e) {
       false,
       ""
     ]);
-    
+
     let correoEnviado = false;
 
     try {
-      enviarCorreoConfirmacion(datos.email, datos.nombre);
+      enviarCorreoConQR(
+        datos.email,
+        datos.nombre,
+        id
+      );
+
       correoEnviado = true;
+
     } catch (errorCorreo) {
       console.error(
-        "Error enviando correo: " + errorCorreo.toString()
+        "Error enviando invitación con QR: " +
+        errorCorreo.toString()
       );
     }
+
 
     return respuestaJSON({
       status: "ok",
@@ -147,3 +155,20 @@ function probarEnvioCorreo() {
     "Invitado de prueba"
   );
 }
+
+
+function probarRegistroLocal() {
+  const evento = {
+    postData: {
+      contents: JSON.stringify({
+        nombre: "Prueba Apps Script",
+        email: "correo-de-prueba@example.com"
+      })
+    }
+  };
+
+  const respuesta = doPost(evento);
+
+  Logger.log(respuesta.getContent());
+}
+

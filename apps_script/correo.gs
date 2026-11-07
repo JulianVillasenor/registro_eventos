@@ -1,25 +1,28 @@
 
 /**
- * Envía un correo de prueba con un QR adjunto.
+ * Envía la invitación con el QR individual del invitado.
+ *
+ * @param {string} email Correo del invitado.
+ * @param {string} nombre Nombre del invitado.
+ * @param {string} id UUID generado durante el registro.
  */
-function probarCorreoConQR() {
-  const email = "julianvillaseno@gmail.com";
-
-  // UUID ficticio para nuestra prueba.
-  const id = "550e8400-e29b-41d4-a716-446655440000";
-
+function enviarCorreoConQR(email, nombre, id) {
   const imagenQR = generarImagenQR(id);
 
-  const asunto = "Prueba de invitación con QR";
+  const asunto = "Tu invitación - Registro de Eventos";
 
   const mensaje = `
-Hola,
+Hola ${nombre},
 
-Tu código QR de acceso al evento está adjunto.
+¡Tu registro al evento se realizó correctamente!
+
+Adjuntamos tu código QR personal de acceso.
 
 Presenta este código al ingresar al evento.
 
 Identificador: ${id}
+
+Te recomendamos conservar este correo hasta el día del evento.
 
 ¡Te esperamos!
 
@@ -34,6 +37,6 @@ Equipo organizador
     name: "Registro de Eventos"
   });
 
-  console.log("Correo enviado a: " + email);
-  console.log("QR adjunto: " + imagenQR.getName());
+  console.log("Invitación enviada a: " + email);
+  console.log("UUID: " + id);
 }
